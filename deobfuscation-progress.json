@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-10-10T16:25:52.945Z",
+  "categories": {
+    "classes": {
+      "total": 285,
+      "obfuscated": 74,
+      "deobfuscated": 211,
+      "percentComplete": 74
+    },
+    "methods": {
+      "total": 7358,
+      "obfuscated": 5729,
+      "deobfuscated": 1629,
+      "percentComplete": 22
+    },
+    "fields": {
+      "total": 8008,
+      "obfuscated": 3243,
+      "deobfuscated": 4765,
+      "percentComplete": 60
+    },
+    "enums": {
+      "total": 171,
+      "obfuscated": 54,
+      "deobfuscated": 117,
+      "percentComplete": 68
+    },
+    "enumValues": {
+      "total": 2448,
+      "obfuscated": 701,
+      "deobfuscated": 1747,
+      "percentComplete": 71
+    }
+  },
+  "overall": {
+    "total": 18270,
+    "obfuscated": 9801,
+    "deobfuscated": 8469,
+    "percentComplete": 46
+  }
+}
