@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-10T16:25:52.945Z",
+  "timestamp": "2025-10-11T18:31:32.933Z",
   "categories": {
     "classes": {
       "total": 285,
@@ -9,14 +9,14 @@
     },
     "methods": {
       "total": 7358,
-      "obfuscated": 5729,
-      "deobfuscated": 1629,
+      "obfuscated": 5721,
+      "deobfuscated": 1637,
       "percentComplete": 22
     },
     "fields": {
       "total": 8008,
-      "obfuscated": 3243,
-      "deobfuscated": 4765,
+      "obfuscated": 3201,
+      "deobfuscated": 4807,
       "percentComplete": 60
     },
     "enums": {
@@ -34,8 +34,8 @@
   },
   "overall": {
     "total": 18270,
-    "obfuscated": 9801,
-    "deobfuscated": 8469,
-    "percentComplete": 46
+    "obfuscated": 9751,
+    "deobfuscated": 8519,
+    "percentComplete": 47
   }
 }
