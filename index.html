@@ -70,11 +70,50 @@
             font-size: 2.5em;
             font-weight: bold;
             margin-bottom: 5px;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .stat-label {
             font-size: 0.9em;
             opacity: 0.9;
+        }
+
+        .header-controls {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .snapshot-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .snapshot-selector label {
+            font-weight: 600;
+            color: #764ba2;
+        }
+
+        .snapshot-selector select {
+            padding: 8px 12px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 6px;
+            background: #f7f9ff;
+            color: #333;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+
+        .snapshot-selector select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
         }
 
         .categories {
@@ -112,6 +151,11 @@
             font-size: 2em;
             font-weight: bold;
             color: #764ba2;
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .progress-bar-container {
@@ -151,6 +195,11 @@
             font-size: 1.3em;
             font-weight: bold;
             color: #333;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .category-stat-label {
@@ -165,6 +214,32 @@
 
         .obfuscated {
             color: #f44336;
+        }
+
+        .change-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.7em;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .change-positive {
+            background: rgba(72, 187, 120, 0.2);
+            color: #276749;
+        }
+
+        .change-negative {
+            background: rgba(245, 101, 101, 0.2);
+            color: #9b2c2c;
+        }
+
+        .change-neutral {
+            background: rgba(160, 174, 192, 0.25);
+            color: #4a5568;
         }
 
         .last-updated {
@@ -210,6 +285,14 @@
         <header>
             <h1>🔍 Deobfuscation Progress</h1>
             <p class="subtitle">Tracking the massive deobfuscation effort</p>
+            <div class="header-controls">
+                <div class="snapshot-selector">
+                    <label for="snapshot-select">Snapshot</label>
+                    <select id="snapshot-select" disabled>
+                        <option>Loading...</option>
+                    </select>
+                </div>
+            </div>
         </header>
 
         <div id="loading" class="loading">Loading deobfuscation data...</div>
@@ -254,6 +337,9 @@
     </div>
 
     <script>
+        let snapshots = [];
+        let currentSnapshotIndex = 0;
+
         async function loadData() {
             try {
                 const response = await fetch('deobfuscation-progress.json');
@@ -261,7 +347,7 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                renderDashboard(data);
+                initializeDashboard(data);
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('loading').style.display = 'none';
@@ -271,24 +357,95 @@
             }
         }
 
-        function renderDashboard(data) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
+        function initializeDashboard(data) {
+            snapshots = buildSnapshots(data);
+            if (!snapshots.length) {
+                throw new Error('No snapshot data available.');
+            }
 
-            // Render overall stats
-            document.getElementById('overall-percent').textContent = data.overall.percentComplete + '%';
-            document.getElementById('overall-total').textContent = data.overall.total.toLocaleString();
-            document.getElementById('overall-deobfuscated').textContent = data.overall.deobfuscated.toLocaleString();
-            document.getElementById('overall-remaining').textContent = data.overall.obfuscated.toLocaleString();
-            
+            snapshots.sort((a, b) => {
+                if (a.timestamp < b.timestamp) return -1;
+                if (a.timestamp > b.timestamp) return 1;
+                return 0;
+            });
+            currentSnapshotIndex = snapshots.length - 1;
+
+            const loading = document.getElementById('loading');
+            const dashboard = document.getElementById('dashboard');
+            loading.style.display = 'none';
+            dashboard.style.display = 'block';
+
+            const select = document.getElementById('snapshot-select');
+            select.innerHTML = '';
+            snapshots.forEach((snapshot, index) => {
+                const option = document.createElement('option');
+                const timestamp = new Date(snapshot.timestamp);
+                option.value = index.toString();
+                option.textContent = `${timestamp.toLocaleString()} (${snapshot.overall.percentComplete}%)`;
+                select.appendChild(option);
+            });
+            select.value = currentSnapshotIndex.toString();
+            select.disabled = snapshots.length <= 1;
+            select.onchange = (event) => {
+                const nextIndex = parseInt(event.target.value, 10);
+                if (!Number.isNaN(nextIndex)) {
+                    currentSnapshotIndex = nextIndex;
+                    renderDashboard(currentSnapshotIndex);
+                }
+            };
+
+            renderDashboard(currentSnapshotIndex);
+        }
+
+        function buildSnapshots(data) {
+            if (Array.isArray(data.history) && data.history.length) {
+                return data.history
+                    .filter((entry) => entry && entry.timestamp && entry.categories && entry.overall)
+                    .map((entry) => ({
+                        timestamp: entry.timestamp,
+                        categories: entry.categories,
+                        overall: entry.overall
+                    }));
+            }
+
+            if (data && data.timestamp && data.categories && data.overall) {
+                return [{
+                    timestamp: data.timestamp,
+                    categories: data.categories,
+                    overall: data.overall
+                }];
+            }
+
+            return [];
+        }
+
+        function renderDashboard(index) {
+            const snapshot = snapshots[index];
+            const previousSnapshot = index > 0 ? snapshots[index - 1] : null;
+
+            const select = document.getElementById('snapshot-select');
+            select.value = index.toString();
+
+            updateOverallSection(snapshot, previousSnapshot);
+            renderCategories(snapshot, previousSnapshot);
+            updateLastUpdated(snapshot.timestamp);
+        }
+
+        function updateOverallSection(snapshot, previousSnapshot) {
+            updateStatValue('overall-percent', snapshot.overall.percentComplete, previousSnapshot?.overall.percentComplete, { isPercent: true });
+            updateStatValue('overall-total', snapshot.overall.total, previousSnapshot?.overall.total);
+            updateStatValue('overall-deobfuscated', snapshot.overall.deobfuscated, previousSnapshot?.overall.deobfuscated);
+            updateStatValue('overall-remaining', snapshot.overall.obfuscated, previousSnapshot?.overall.obfuscated);
+
             const overallBar = document.getElementById('overall-progress-bar');
-            setTimeout(() => {
-                overallBar.style.width = data.overall.percentComplete + '%';
-                overallBar.querySelector('span').textContent = data.overall.percentComplete + '%';
-            }, 100);
+            const overallBarText = document.getElementById('overall-progress-text');
+            animateProgressBar(overallBar, snapshot.overall.percentComplete, overallBarText);
+        }
 
-            // Render categories
+        function renderCategories(snapshot, previousSnapshot) {
             const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+
             const categoryOrder = ['classes', 'methods', 'fields', 'enums', 'enumValues'];
             const categoryLabels = {
                 classes: 'Classes',
@@ -298,31 +455,45 @@
                 enumValues: 'Enum Values'
             };
 
-            categoryOrder.forEach(key => {
-                const category = data.categories[key];
+            categoryOrder.forEach((key) => {
+                const category = snapshot.categories[key];
+                if (!category) {
+                    return;
+                }
+
+                const previousCategory = previousSnapshot?.categories?.[key];
+
                 const card = document.createElement('div');
                 card.className = 'category-card';
                 card.innerHTML = `
                     <div class="category-header">
                         <div class="category-name">${categoryLabels[key]}</div>
-                        <div class="category-percent">${category.percentComplete}%</div>
+                        <div class="category-percent">
+                            ${category.percentComplete}%${renderChangeBadge(category.percentComplete, previousCategory?.percentComplete, { isPercent: true })}
+                        </div>
                     </div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar category-progress-bar" data-percent="${category.percentComplete}" style="width: 0%;">
+                        <div class="progress-bar category-progress-bar" data-target="${category.percentComplete}">
                             <span></span>
                         </div>
                     </div>
                     <div class="category-stats">
                         <div class="category-stat">
-                            <div class="category-stat-value">${category.total.toLocaleString()}</div>
+                            <div class="category-stat-value">
+                                ${category.total.toLocaleString()}${renderChangeBadge(category.total, previousCategory?.total)}
+                            </div>
                             <div class="category-stat-label">Total</div>
                         </div>
                         <div class="category-stat">
-                            <div class="category-stat-value deobfuscated">${category.deobfuscated.toLocaleString()}</div>
+                            <div class="category-stat-value deobfuscated">
+                                ${category.deobfuscated.toLocaleString()}${renderChangeBadge(category.deobfuscated, previousCategory?.deobfuscated)}
+                            </div>
                             <div class="category-stat-label">Deobfuscated</div>
                         </div>
                         <div class="category-stat">
-                            <div class="category-stat-value obfuscated">${category.obfuscated.toLocaleString()}</div>
+                            <div class="category-stat-value obfuscated">
+                                ${category.obfuscated.toLocaleString()}${renderChangeBadge(category.obfuscated, previousCategory?.obfuscated)}
+                            </div>
                             <div class="category-stat-label">Remaining</div>
                         </div>
                     </div>
@@ -330,22 +501,78 @@
                 container.appendChild(card);
             });
 
-            // Animate category progress bars
-            setTimeout(() => {
-                document.querySelectorAll('.category-progress-bar').forEach(bar => {
-                    const percent = bar.getAttribute('data-percent');
-                    bar.style.width = percent + '%';
-                    bar.querySelector('span').textContent = percent + '%';
+            requestAnimationFrame(() => {
+                container.querySelectorAll('.category-progress-bar').forEach((bar) => {
+                    const target = Number(bar.getAttribute('data-target')) || 0;
+                    animateProgressBar(bar, target);
                 });
-            }, 200);
+            });
+        }
 
-            // Update last updated time
-            const lastUpdated = new Date(data.timestamp);
-            document.getElementById('last-updated').textContent = 
+        function updateStatValue(elementId, value, previousValue, options = {}) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                return;
+            }
+            const formattedValue = options.isPercent ? `${value}%` : value.toLocaleString();
+            element.innerHTML = `${formattedValue}${renderChangeBadge(value, previousValue, options)}`;
+        }
+
+        function renderChangeBadge(currentValue, previousValue, { isPercent = false } = {}) {
+            if (previousValue === undefined || previousValue === null) {
+                return '';
+            }
+
+            const delta = currentValue - previousValue;
+            let className = 'change-neutral';
+            if (delta > 0) {
+                className = 'change-positive';
+            } else if (delta < 0) {
+                className = 'change-negative';
+            }
+
+            if (delta === 0) {
+                return `<span class="change-badge ${className}">0${isPercent ? '%' : ''}</span>`;
+            }
+
+            const prefix = delta > 0 ? '+' : '';
+            const valueText = isPercent ? `${delta}` : delta.toLocaleString();
+            const suffix = isPercent ? '%' : '';
+            return `<span class="change-badge ${className}">${prefix}${valueText}${suffix}</span>`;
+        }
+
+        function animateProgressBar(barElement, percent, textElement) {
+            if (!barElement) {
+                return;
+            }
+
+            const safePercent = Math.max(0, Math.min(100, Number(percent) || 0));
+
+            barElement.style.transition = 'none';
+            barElement.style.width = '0%';
+
+            const span = textElement || barElement.querySelector('span');
+            if (span) {
+                span.textContent = '';
+            }
+
+            requestAnimationFrame(() => {
+                barElement.style.transition = '';
+                requestAnimationFrame(() => {
+                    barElement.style.width = `${safePercent}%`;
+                    if (span) {
+                        span.textContent = `${safePercent}%`;
+                    }
+                });
+            });
+        }
+
+        function updateLastUpdated(timestamp) {
+            const lastUpdated = new Date(timestamp);
+            document.getElementById('last-updated').textContent =
                 `Last updated: ${lastUpdated.toLocaleString()}`;
         }
 
-        // Load data on page load
         loadData();
     </script>
 </body>
