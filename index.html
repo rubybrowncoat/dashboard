@@ -433,7 +433,7 @@
 
         function updateOverallSection(snapshot, previousSnapshot) {
             updateStatValue('overall-percent', snapshot.overall.percentComplete, previousSnapshot?.overall.percentComplete, { isPercent: true });
-            updateStatValue('overall-total', snapshot.overall.total, previousSnapshot?.overall.total);
+            updateStatValue('overall-total', snapshot.overall.total, previousSnapshot?.overall.total, { includeChangeBadge: false });
             updateStatValue('overall-deobfuscated', snapshot.overall.deobfuscated, previousSnapshot?.overall.deobfuscated);
             updateStatValue('overall-remaining', snapshot.overall.obfuscated, previousSnapshot?.overall.obfuscated);
 
@@ -446,10 +446,12 @@
             const container = document.getElementById('categories-container');
             container.innerHTML = '';
 
-            const categoryOrder = ['classes', 'methods', 'fields', 'enums', 'enumValues'];
+            const categoryOrder = ['classes', 'methods', 'methodArguments', 'methodVariables', 'fields', 'enums', 'enumValues'];
             const categoryLabels = {
                 classes: 'Classes',
                 methods: 'Methods',
+                methodArguments: 'Arguments',
+                methodVariables: 'Variables',
                 fields: 'Fields',
                 enums: 'Enums',
                 enumValues: 'Enum Values'
@@ -480,7 +482,7 @@
                     <div class="category-stats">
                         <div class="category-stat">
                             <div class="category-stat-value">
-                                ${category.total.toLocaleString()}${renderChangeBadge(category.total, previousCategory?.total)}
+                                ${category.total.toLocaleString()}
                             </div>
                             <div class="category-stat-label">Total</div>
                         </div>
@@ -514,8 +516,10 @@
             if (!element) {
                 return;
             }
-            const formattedValue = options.isPercent ? `${value}%` : value.toLocaleString();
-            element.innerHTML = `${formattedValue}${renderChangeBadge(value, previousValue, options)}`;
+            const { isPercent = false, includeChangeBadge = true } = options;
+            const formattedValue = isPercent ? `${value}%` : value.toLocaleString();
+            const changeMarkup = includeChangeBadge ? renderChangeBadge(value, previousValue, { isPercent }) : '';
+            element.innerHTML = `${formattedValue}${changeMarkup}`;
         }
 
         function renderChangeBadge(currentValue, previousValue, { isPercent = false } = {}) {
