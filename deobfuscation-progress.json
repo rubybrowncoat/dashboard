@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-14T22:47:05.020Z",
+  "timestamp": "2025-10-15T06:06:16.961Z",
   "categories": {
     "classes": {
       "total": 285,
@@ -15,15 +15,15 @@
     },
     "methodArguments": {
       "total": 10145,
-      "obfuscated": 8402,
-      "deobfuscated": 1743,
+      "obfuscated": 8457,
+      "deobfuscated": 1688,
       "percentComplete": 17
     },
     "methodVariables": {
-      "total": 15121,
-      "obfuscated": 6395,
-      "deobfuscated": 8726,
-      "percentComplete": 58
+      "total": 13881,
+      "obfuscated": 7805,
+      "deobfuscated": 6076,
+      "percentComplete": 44
     },
     "fields": {
       "total": 8008,
@@ -45,10 +45,10 @@
     }
   },
   "overall": {
-    "total": 43536,
-    "obfuscated": 24451,
-    "deobfuscated": 19085,
-    "percentComplete": 44
+    "total": 42296,
+    "obfuscated": 25916,
+    "deobfuscated": 16380,
+    "percentComplete": 39
   },
   "history": [
     {
@@ -134,7 +134,7 @@
       }
     },
     {
-      "timestamp": "2025-10-14T22:47:05.020Z",
+      "timestamp": "2025-10-15T06:06:16.961Z",
       "categories": {
         "classes": {
           "total": 285,
@@ -150,15 +150,15 @@
         },
         "methodArguments": {
           "total": 10145,
-          "obfuscated": 8402,
-          "deobfuscated": 1743,
+          "obfuscated": 8457,
+          "deobfuscated": 1688,
           "percentComplete": 17
         },
         "methodVariables": {
-          "total": 15121,
-          "obfuscated": 6395,
-          "deobfuscated": 8726,
-          "percentComplete": 58
+          "total": 13881,
+          "obfuscated": 7805,
+          "deobfuscated": 6076,
+          "percentComplete": 44
         },
         "fields": {
           "total": 8008,
@@ -180,10 +180,10 @@
         }
       },
       "overall": {
-        "total": 43536,
-        "obfuscated": 24451,
-        "deobfuscated": 19085,
-        "percentComplete": 44
+        "total": 42296,
+        "obfuscated": 25916,
+        "deobfuscated": 16380,
+        "percentComplete": 39
       }
     }
   ]
