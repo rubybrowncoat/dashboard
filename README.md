@@ -19,10 +19,10 @@ The dashboard monitors deobfuscation progress across five categories:
 
 ## How It Works
 
-1. **Analysis Script**: The `static-analysis/regex-analysis.mjs` script scans all C# files in the project
-2. **Data Generation**: It generates `docs/deobfuscation-progress.json` with current statistics
-3. **Visualization**: The `docs/index.html` dashboard displays the data with progress bars
-4. **Automation**: GitHub Actions automatically updates the dashboard when C# files are changed
+1. **Analysis CLI**: `dotnet run --project "../Aurora C# Static Analysis/roslyn-analyzer.csproj" --configuration Release -- --analysis names` scans all C# files
+2. **Data Generation**: The CLI writes `docs/deobfuscation-progress.json` (with history snapshots)
+3. **Visualization**: `docs/index.html` renders the data with progress bars
+4. **Automation**: GitHub Actions/PowerShell scripts can run the CLI to keep the dashboard current
 
 ## Data Format
 
