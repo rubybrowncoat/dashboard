@@ -1,53 +1,53 @@
 ﻿{
-  "timestamp": "2025-10-24T20:38:42.2546639Z",
+  "timestamp": "2025-10-28T21:37:13.4896360Z",
   "categories": {
     "classes": {
       "total": 1050,
-      "obfuscated": 215,
-      "deobfuscated": 835,
+      "obfuscated": 214,
+      "deobfuscated": 836,
       "percentComplete": 80
     },
     "methods": {
       "total": 31381,
-      "obfuscated": 13715,
-      "deobfuscated": 17666,
+      "obfuscated": 13676,
+      "deobfuscated": 17705,
       "percentComplete": 56
     },
     "methodArguments": {
       "total": 40586,
-      "obfuscated": 32308,
-      "deobfuscated": 8278,
-      "percentComplete": 20
+      "obfuscated": 32218,
+      "deobfuscated": 8368,
+      "percentComplete": 21
     },
     "methodVariables": {
       "total": 46603,
-      "obfuscated": 31093,
-      "deobfuscated": 15510,
-      "percentComplete": 33
+      "obfuscated": 30825,
+      "deobfuscated": 15778,
+      "percentComplete": 34
     },
     "fields": {
       "total": 24500,
-      "obfuscated": 8852,
-      "deobfuscated": 15648,
+      "obfuscated": 8808,
+      "deobfuscated": 15692,
       "percentComplete": 64
     },
     "enums": {
       "total": 579,
-      "obfuscated": 157,
-      "deobfuscated": 422,
+      "obfuscated": 155,
+      "deobfuscated": 424,
       "percentComplete": 73
     },
     "enumValues": {
       "total": 7786,
-      "obfuscated": 2538,
-      "deobfuscated": 5248,
-      "percentComplete": 67
+      "obfuscated": 2518,
+      "deobfuscated": 5268,
+      "percentComplete": 68
     }
   },
   "overall": {
     "total": 152485,
-    "obfuscated": 88878,
-    "deobfuscated": 63607,
+    "obfuscated": 88414,
+    "deobfuscated": 64071,
     "percentComplete": 42
   },
   "history": [
@@ -395,6 +395,59 @@
         "total": 152485,
         "obfuscated": 88878,
         "deobfuscated": 63607,
+        "percentComplete": 42
+      }
+    },
+    {
+      "timestamp": "2025-10-28T21:37:13.4896360Z",
+      "categories": {
+        "classes": {
+          "total": 1050,
+          "obfuscated": 214,
+          "deobfuscated": 836,
+          "percentComplete": 80
+        },
+        "methods": {
+          "total": 31381,
+          "obfuscated": 13676,
+          "deobfuscated": 17705,
+          "percentComplete": 56
+        },
+        "methodArguments": {
+          "total": 40586,
+          "obfuscated": 32218,
+          "deobfuscated": 8368,
+          "percentComplete": 21
+        },
+        "methodVariables": {
+          "total": 46603,
+          "obfuscated": 30825,
+          "deobfuscated": 15778,
+          "percentComplete": 34
+        },
+        "fields": {
+          "total": 24500,
+          "obfuscated": 8808,
+          "deobfuscated": 15692,
+          "percentComplete": 64
+        },
+        "enums": {
+          "total": 579,
+          "obfuscated": 155,
+          "deobfuscated": 424,
+          "percentComplete": 73
+        },
+        "enumValues": {
+          "total": 7786,
+          "obfuscated": 2518,
+          "deobfuscated": 5268,
+          "percentComplete": 68
+        }
+      },
+      "overall": {
+        "total": 152485,
+        "obfuscated": 88414,
+        "deobfuscated": 64071,
         "percentComplete": 42
       }
     }
